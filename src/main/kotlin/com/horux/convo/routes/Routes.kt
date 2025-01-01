@@ -4,22 +4,30 @@ import com.horux.convo.filters.AuthenticationFilter
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.server.RouterFunction
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.router
 
 @Component
-class SecurityRoutes {
+class Routes {
 
     @Bean
-    fun routes(routeLocatorBuilder: RouteLocatorBuilder, authenticationFilter: AuthenticationFilter) =
+    fun profileRoutes(routeLocatorBuilder: RouteLocatorBuilder, authenticationFilter: AuthenticationFilter) =
         routeLocatorBuilder.routes()
-            .route("profiles-route") { route ->
+            .route("profile-route") { route ->
                 route.path("/api/v1/profiles/**") // Adjust path predicate as needed
 //                    .filters { filterSpec ->
 //                        filterSpec.filter(authenticationFilter) // Apply the authentication filter
 //                    }
-                    .uri("http://localhost:8091/api/v1/profiles")
+                    .uri("http://localhost:8091")
+            }
+            .build()
+    @Bean
+    fun securityRoutes(routeLocatorBuilder: RouteLocatorBuilder, authenticationFilter: AuthenticationFilter) =
+        routeLocatorBuilder.routes()
+            .route("security-route") { route ->
+                route.path("/api/v1/public/login/**") // Adjust path predicate as needed
+//                    .filters { filterSpec ->
+//                        filterSpec.filter(authenticationFilter) // Apply the authentication filter
+//                    }
+                    .uri("http://localhost:8090")
             }
             .build()
 
